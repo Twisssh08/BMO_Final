@@ -1,7 +1,8 @@
-import streamlit as st
 import paho.mqtt.client as paho
 import time
+import streamlit as st
 import json
+import platform
 
 # Configuración MQTT
 broker = "broker.mqttdashboard.com"
@@ -43,7 +44,12 @@ def pagina_baile():
         return
 
     if st.button("¡Reproducir Baile!"):
-        resultado = client.publish("BMO_wowki","{'gesto': 'Baile'}",qos=0, retain=False)
+        act1="BAILE"
+        client1= paho.Client("BMO_streamlit")                           
+        client1.on_publish = on_publish                          
+        client1.connect(broker,port)  
+        message =json.dumps({"Act1":act1})
+        ret= client1.publish("cmqtt_s", message)
         st.audio(audio_bytes, format="audio/mp3")
         if resultado.rc == 0:
             st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
