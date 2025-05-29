@@ -45,8 +45,7 @@ def pagina_baile():
 
     if st.button("¡Reproducir Baile!"):
         act1="BAILE"
-        client= paho.Client("BMO_streamlit")                           
-        client.on_publish = on_publish                          
+        client= paho.Client("BMO_streamlit")                                                    
         client.connect(broker,port)  
         message =json.dumps({"Act1":act1})
         ret= client.publish("BMO_wokwi", message)
