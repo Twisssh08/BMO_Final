@@ -5,7 +5,7 @@ import json
 import platform
 
 # Muestra la versión de Python junto con detalles adicionales
-st.write("Versión Python:", platform.python_version())
+st.write("Versión de Python:", platform.python_version())
 
 values = 0.0
 act1="OFF"
@@ -38,7 +38,7 @@ if st.button('ON'):
     client1.on_publish = on_publish                          
     client1.connect(broker,port)  
     message =json.dumps({"Act1":act1})
-    ret= client1.publish("BMO_wokwi", message)
+    ret= client1.publish("BMO", message)
  
     #client1.subscribe("Sensores")
     
@@ -52,7 +52,7 @@ if st.button('OFF'):
     client1.on_publish = on_publish                          
     client1.connect(broker,port)  
     message =json.dumps({"Act1":act1})
-    ret= client1.publish("BMO_wokwi", message)
+    ret= client1.publish("BMO", message)
   
     
 else:
@@ -66,8 +66,9 @@ if st.button('Enviar valor analógico'):
     client1.on_publish = on_publish                          
     client1.connect(broker,port)   
     message =json.dumps({"Analog": float(values)})
-    ret= client1.publish("cmqtt_a", message)
+    ret= client1.publish("BMO", message)
     
  
 else:
     st.write('')
+
