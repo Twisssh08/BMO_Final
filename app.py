@@ -45,11 +45,11 @@ def pagina_baile():
 
     if st.button("¡Reproducir Baile!"):
         act1="BAILE"
-        client1= paho.Client("BMO_streamlit")                           
-        client1.on_publish = on_publish                          
-        client1.connect(broker,port)  
+        client= paho.Client("BMO_streamlit")                           
+        client.on_publish = on_publish                          
+        client.connect(broker,port)  
         message =json.dumps({"Act1":act1})
-        ret= client1.publish("cmqtt_s", message)
+        ret= client.publish("BMO_wokwi", message)
         st.audio(audio_bytes, format="audio/mp3")
         if resultado.rc == 0:
             st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
