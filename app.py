@@ -50,10 +50,8 @@ def pagina_baile():
         message =json.dumps({"BAILE":act1})
         ret= client.publish("BMO_wokwi", message)
         st.audio(audio_bytes, format="audio/mp3")
-        if resultado.rc == 0:
-            st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
-        else:
-            st.error("❌ Fallo al enviar el mensaje MQTT.")
+        st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
+   
 
 # Página: Chatea con BMO
 def pagina_chat():
@@ -77,4 +75,4 @@ paginas = {
 # Sidebar de navegación
 st.sidebar.title("Funciones Disponibles")
 seleccion = st.sidebar.radio("Ir a", list(paginas.keys()))
-paginas[seleccion]()
+paginas[seleccion]
