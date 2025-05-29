@@ -47,7 +47,7 @@ def pagina_baile():
         act1="BAILE"
         client= paho.Client("BMO_streamlit")                                                    
         client.connect(broker,port)  
-        message =json.dumps({"Act1":act1})
+        message =json.dumps({"BAILE":act1})
         ret= client.publish("BMO_wokwi", message)
         st.audio(audio_bytes, format="audio/mp3")
         if resultado.rc == 0:
