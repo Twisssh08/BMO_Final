@@ -44,6 +44,7 @@ def pagina_baile():
 
     if st.button("¡Reproducir Baile!"):
         resultado = publicar_baile()
+        resultado = client.publish(topic, json.dumps({"accion": "BAILEEE"}))
         st.audio(audio_bytes, format="audio/mp3")
         if resultado.rc == 0:
             st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
