@@ -4,75 +4,70 @@ import streamlit as st
 import json
 import platform
 
-# Configuración MQTT
-broker = "broker.mqttdashboard.com"
-port = 1883
-topic = "BMO_wokwi"
+# Muestra la versión de Python junto con detalles adicionales
+st.write("Versión de Python:", platform.python_version())
 
-client = paho.Client("BMO_streamlit")
-client.connect(broker, port)
-client.loop_start()
+values = 0.0
+act1="OFF"
 
-# Función para publicar mensaje de baile
-def publicar_baile():
-    mensaje = {"accion": "baile", "duracion": 6}
-    resultado = client.publish(topic, json.dumps(mensaje))
-    return resultado
+def on_publish(client,userdata,result):             #create function for callback
+    print("el dato ha sido publicado \n")
+    pass
 
-# Página: Saludo
-def pagina_saludo():
-    st.title("👋 Saludo de BMO")
-    st.write("Presiona el botón para que BMO te salude.")
-    if st.button("¡Saluda, BMO!"):
-        resultado = client.publish(topic, json.dumps({"accion": "saludo"}))
-        if resultado.rc == 0:
-            st.success("✅ BMO envió su saludo.")
-        else:
-            st.error("❌ Fallo al enviar el saludo.")
+def on_message(client, userdata, message):
+    global message_received
+    time.sleep(2)
+    message_received=str(message.payload.decode("utf-8"))
+    st.write(message_received)
 
-# Página: Control de Baile
-def pagina_baile():
-    st.title("🕺 Activar Motores de Baile")
-    st.write("Presiona el botón para que BMO baile y suene la canción.")
+        
+
+
+broker="157.230.214.127"
+port=1883
+client1= paho.Client("GIT-HUB")
+client1.on_message = on_message
+
+
+
+st.title("MQTT Control")
+
+if st.button('ON'):
+    act1="ON"
+    client1= paho.Client("GIT-HUB")                           
+    client1.on_publish = on_publish                          
+    client1.connect(broker,port)  
+    message =json.dumps({"Act1":act1})
+    ret= client1.publish("cmqtt_s", message)
+ 
+    #client1.subscribe("Sensores")
     
-    try:
-        audio_file = open("AudioBMO.mp3", "rb")
-        audio_bytes = audio_file.read()
-        audio_file.close()
-    except FileNotFoundError:
-        st.error("❌ Archivo de audio no encontrado.")
-        return
+    
+else:
+    st.write('')
 
-    if st.button("¡Reproducir Baile!"):
-        act1="BAILE"
-        client= paho.Client("BMO_streamlit")                                                    
-        client.connect(broker,port)  
-        message =json.dumps({"BAILE":act1})
-        ret= client.publish("BMO_wokwi", message)
-        st.audio(audio_bytes, format="audio/mp3")
-        st.success("✅ Motores activados en Wokwi (mensaje MQTT enviado).")
-   
+if st.button('OFF'):
+    act1="OFF"
+    client1= paho.Client("GIT-HUB")                           
+    client1.on_publish = on_publish                          
+    client1.connect(broker,port)  
+    message =json.dumps({"Act1":act1})
+    ret= client1.publish("cmqtt_s", message)
+  
+    
+else:
+    st.write('')
 
-# Página: Chatea con BMO
-def pagina_chat():
-    st.title("💬 Chatea con BMO")
-    st.write("Aquí podras chatear con BMO En tiempo real")
-    pregunta = st.text_input("¿Qué quieres preguntarle a BMO?")
-    if st.button("Enviar pregunta"):
-        if pregunta.strip():
-            client.publish(topic, json.dumps({"accion": "pregunta", "texto": pregunta}))
-            st.success("✅ Pregunta enviada a BMO.")
-        else:
-            st.warning("Por favor escribe algo antes de enviar.")
+values = st.slider('Selecciona el rango de valores',0.0, 100.0)
+st.write('Values:', values)
 
-# Diccionario de páginas
-paginas = {
-    "Saludo": pagina_saludo,
-    "Control de Baile": pagina_baile,
-    "Chatea con BMO": pagina_chat,
-}
-
-# Sidebar de navegación
-st.sidebar.title("Funciones Disponibles")
-seleccion = st.sidebar.radio("Ir a", list(paginas.keys()))
-paginas[seleccion]()
+if st.button('Enviar valor analógico'):
+    client1= paho.Client("GIT-HUB")                           
+    client1.on_publish = on_publish                          
+    client1.connect(broker,port)   
+    message =json.dumps({"Analog": float(values)})
+    ret= client1.publish("cmqtt_a", message)
+    
+ 
+else:
+    st.write('')
