@@ -75,4 +75,4 @@ paginas = {
 # Sidebar de navegación
 st.sidebar.title("Funciones Disponibles")
 seleccion = st.sidebar.radio("Ir a", list(paginas.keys()))
-paginas[seleccion]
+paginas[seleccion]()
