@@ -72,3 +72,6 @@ if st.button('Enviar valor analógico'):
 else:
     st.write('')
 
+
+
+
